@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кейс-задача № 2: Счетчик</title>
+    <style>
+        /* 1. Стилизация интерфейса */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            /* Фон - линейный градиент */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #result {
+            font-size: 60px;
+            font-weight: bold;
+            margin: 0 0 20px 0;
+            padding: 10px 30px;
+            border-radius: 10px;
+            color: #333;
+            transition: background-color 0.3s ease; /* Плавная смена цвета */
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        button {
+            font-size: 24px;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-weight: bold;
+            /* Радиальное скругление 5 пикселей */
+            border-radius: 5px;
+            /* Фон кнопок - градиент */
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s, opacity 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Стиль для неактивной кнопки */
+        button:disabled {
+            background: linear-gradient(to bottom, #cccccc 0%, #999999 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 id="result">0</h1>
+        <div class="buttons">
+            <button id="minus-btn">-</button>
+            <button id="plus-btn">+</button>
+        </div>
+    </div>
+
+    <script>
+        // 2. Реализация функционала счетчика
+        let count = 0;
+        const resultElement = document.getElementById('result');
+        const plusBtn = document.getElementById('plus-btn');
+        const minusBtn = document.getElementById('minus-btn');
+
+        // Функция обновления интерфейса
+        function updateUI() {
+            // Обновляем текст
+            resultElement.textContent = count;
+
+            // 3. Меняем цвет фона в зависимости от значения
+            if (count > 0) {
+                resultElement.style.backgroundColor = 'yellow';
+            } else if (count < 0) {
+                resultElement.style.backgroundColor = 'green';
+            } else {
+                resultElement.style.backgroundColor = 'red';
+            }
+
+            // 4. Логика блокировки кнопок
+            if (count === 10) {
+                plusBtn.disabled = true;
+            } else {
+                plusBtn.disabled = false;
+            }
+
+            if (count === -10) {
+                minusBtn.disabled = true;
+            } else {
+                minusBtn.disabled = false;
+            }
+
+            // 5. Открытие нового окна при достижении экстремальных значений
+            if (count === 10 || count === -10) {
+                const newWindow = window.open('', '_blank', 'width=400,height=200');
+                if (newWindow) {
+                    newWindow.document.write(`
+                        <html>
+                        <head><title>Уведомление</title></head>
+                        <body style="display:flex; justify-content:center; align-items:center; height:100vh; margin:0; font-family:Arial;">
+                            <h2 style="text-align:center;">Вы достигли экстремального значения</h2>
+                        </body>
+                        </html>
+                    `);
+                }
+            }
+        }
+
+        // Обработчики событий (слушатели)
+        plusBtn.addEventListener('click', () => {
+            count++;
+            updateUI();
+        });
+
+        minusBtn.addEventListener('click', () => {
+            count--;
+            updateUI();
+        });
+
+        // Инициализация при загрузке (чтобы 0 сразу был красным)
+        updateUI();
+    </script>
+
+</body>
+</html>
